@@ -1,0 +1,22 @@
+{
+  "name": "thinkspace-mcp-remote",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Remote MCP server (Cloudflare Workers + OAuth 2.1) that sends notes from ChatGPT / Claude into the ThinkSpace inbox",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@cloudflare/workers-oauth-provider": "^1.1.0",
+    "@modelcontextprotocol/sdk": "^1.30.1",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260926.1",
+    "typescript": "^5.9.0",
+    "wrangler": "^4.141.0"
+  }
+}

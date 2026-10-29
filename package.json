@@ -1,0 +1,41 @@
+{
+  "name": "thinkspace-mcp",
+  "version": "0.1.0",
+  "description": "MCP server that sends distilled notes from AI sessions to the ThinkSpace app inbox",
+  "main": "index.js",
+  "bin": {
+    "thinkspace-mcp": "index.js"
+  },
+  "files": [
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mcp",
+    "modelcontextprotocol",
+    "thinkspace",
+    "notes",
+    "thinking"
+  ],
+  "author": "Naoya Enokida",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/naoyax628X/thinkspace-mcp.git"
+  },
+  "homepage": "https://thinkspace-app.com/",
+  "bugs": {
+    "url": "https://github.com/naoyax628X/thinkspace-mcp/issues"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

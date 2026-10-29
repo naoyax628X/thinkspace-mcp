@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.thinkspace-app/thinkspace",
+  "title": "ThinkSpace",
+  "description": "Send notes from Claude, ChatGPT or Claude Code to your ThinkSpace inbox and arrange them into cards.",
+  "repository": {
+    "url": "https://github.com/naoyax628X/thinkspace-mcp",
+    "source": "github"
+  },
+  "websiteUrl": "https://thinkspace-app.com/",
+  "version": "0.2.1",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.thinkspace-app.com/mcp"
+    }
+  ]
+}

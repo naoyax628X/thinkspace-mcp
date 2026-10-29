@@ -1,0 +1,6 @@
+# wrangler dev 用。本番は `wrangler secret put` で同名の secret を入れる
+SUPABASE_URL=https://<project>.supabase.co
+SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+# OpenAI のドメイン検証 (提出時に発行される文字列)。未設定なら /.well-known/openai-apps-challenge は 404
+OPENAI_CHALLENGE_TOKEN=

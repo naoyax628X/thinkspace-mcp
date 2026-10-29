@@ -1,0 +1,28 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "thinkspace-mcp",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-07-29",
+  // nodejs_compat: MCP SDK。global_fetch_strictly_public: CIMD (Client ID Metadata Document) の取得を公開アドレスに限定 (SSRF 対策)
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  // 独自ドメインでだけ受ける (OAuth の issuer / resource は vars.PUBLIC_BASE_URL から決まるので、ドメインと揃える)
+  "workers_dev": false,
+  "routes": [{ "pattern": "mcp.thinkspace-app.com", "custom_domain": true }],
+  "kv_namespaces": [{ "binding": "OAUTH_KV", "id": "467005c77c9a498fb4c0a74a8325ac6a" }],
+  // 認可画面の試行制限 (アトミック。KV のカウンタは並列リクエストで抜けられる)。period は 10 か 60 秒のみ
+  "ratelimits": [
+    { "name": "RL_CODE", "namespace_id": "1001", "simple": { "limit": 5, "period": 60 } },
+    { "name": "RL_PASSWORD", "namespace_id": "1002", "simple": { "limit": 10, "period": 60 } },
+    { "name": "RL_SEND", "namespace_id": "1003", "simple": { "limit": 60, "period": 60 } }
+  ],
+  "vars": {
+    // 公開 URL。resource / issuer / 認可画面の表示に使う
+    "PUBLIC_BASE_URL": "https://mcp.thinkspace-app.com",
+    // 説明ページ (サポートサイト、ja / en)。"/" と認可画面の「使い方」は Accept-Language で振り分ける
+    "DOCS_URL": "https://support.thinkspace.nextbuild.jp/ai-inbox/",
+    "DOCS_URL_EN": "https://support.thinkspace.nextbuild.jp/en/ai-inbox/",
+    "PRIVACY_URL": "https://thinkspace-public.s3.ap-northeast-1.amazonaws.com/privacy-policy-en-v2.html"
+  },
+  // secrets (wrangler secret put): SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, OPENAI_CHALLENGE_TOKEN
+  "observability": { "enabled": true }
+}
