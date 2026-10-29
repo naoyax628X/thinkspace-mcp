@@ -67,11 +67,18 @@ function buildServer(env: Env, props: AuthProps): McpServer {
   return server;
 }
 
-/** user_id ごとに 60 回 / 分 (Rate Limiting binding、KV には書かない)。binding が無い環境では通す */
-async function overRateLimit(env: Env, userId: string): Promise<boolean> {
+/**
+ * user_id ごとに 60 回 / 分 (Rate Limiting binding、KV には書かない)。binding が無い環境では通す。
+ * JSON-RPC のバッチ (配列) で tools/call が複数来た時は件数ぶん消費する。
+ * 1 回しか消費しないと、100 件バッチで 60 件/分 の上限が実質 6,000 件/分 になる
+ */
+async function overRateLimit(env: Env, userId: string, count: number): Promise<boolean> {
   if (!env.RL_SEND) return false;
-  const { success } = await env.RL_SEND.limit({ key: `user:${userId}` });
-  return !success;
+  for (let i = 0; i < count; i++) {
+    const { success } = await env.RL_SEND.limit({ key: `user:${userId}` });
+    if (!success) return true;
+  }
+  return false;
 }
 
 /** リクエスト本文の JSON-RPC メソッド名 (単発 / バッチ)。本文そのものは扱わない */
@@ -136,8 +143,9 @@ export async function handleMcp(request: Request, env: Env, props: AuthProps, ct
     });
   }
   const methods = await rpcMethods(request);
-  const toolCall = methods.includes("tools/call");
-  if (toolCall && (await overRateLimit(env, props.user_id))) return jsonRpcError(429, "Too many requests. Try again in a minute.");
+  const toolCallCount = methods.filter((m) => m === "tools/call").length;
+  const toolCall = toolCallCount > 0;
+  if (toolCall && (await overRateLimit(env, props.user_id, toolCallCount))) return jsonRpcError(429, "Too many requests. Try again in a minute.");
 
   const server = buildServer(env, props);
   const transport = new WebStandardStreamableHTTPServerTransport({
