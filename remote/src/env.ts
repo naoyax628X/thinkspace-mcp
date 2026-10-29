@@ -6,6 +6,8 @@ export interface Env {
   OAUTH_PROVIDER: OAuthHelpers;
   /** Rate Limiting bindings (wrangler.jsonc の ratelimits)。認可画面のコード入力 / パスワード照合の試行制限 */
   RL_CODE?: RateLimit;
+  /** 6 桁コード照合の全体上限 (key 固定)。コードはユーザーに束縛されないので、分散 IP の総当たりは IP 単位では止まらない */
+  RL_CODE_GLOBAL?: RateLimit;
   RL_PASSWORD?: RateLimit;
   /** send_to_inbox の回数制限 (user_id ごと 60 回 / 分) */
   RL_SEND?: RateLimit;

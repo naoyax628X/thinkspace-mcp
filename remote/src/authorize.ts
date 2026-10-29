@@ -172,7 +172,9 @@ export async function handleAuthorize(request: Request, env: Env): Promise<Respo
       if (!userId) error = "errPassword";
     } else if (method === "code") {
       const code = String(form.get("code") ?? "").replace(/\D/g, "");
-      if (code.length === 6 && (await allowed(env.RL_CODE, `ip:${ip}`))) {
+      // IP ごと (5 回/分) に加えて全体 (60 回/分) でも制限する。未消費コードはどのユーザーのものでも当たりになるので、
+      // 分散 IP からの総当たりは全体の上限でしか止まらない (backend は attempts 列を持たない)
+      if (code.length === 6 && (await allowed(env.RL_CODE, `ip:${ip}`)) && (await allowed(env.RL_CODE_GLOBAL, "global"))) {
         userId = await consumePairingCode(env, code);
       }
       if (!userId) error = "errCode";
