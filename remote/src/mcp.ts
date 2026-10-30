@@ -37,6 +37,7 @@ function buildServer(env: Env, props: AuthProps): McpServer {
         source: z.string().max(32).optional().describe("Origin identifier. Defaults to mcp."),
       },
       annotations: {
+        title: "Send to ThinkSpace Inbox",
         readOnlyHint: false,
         destructiveHint: false,
         idempotentHint: false,
