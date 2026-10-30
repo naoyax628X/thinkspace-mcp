@@ -6,9 +6,11 @@
 // - /mcp: send_to_inbox ツール (mcp.ts)。ctx.props に user_id が入る
 // - /.well-known/openai-apps-challenge: OpenAI のドメイン検証
 // - /: 説明ページへ redirect
+// - /favicon.ico, /favicon.png, /icon.png: アプリアイコン (icon.ts)
 
 import OAuthProvider from "@cloudflare/workers-oauth-provider";
 import { handleAuthorize } from "./authorize";
+import { handleIcon } from "./icon";
 import { AUTHORIZE_PATH, MCP_PATH, REGISTER_PATH, REQUIRED_SCOPES, SCOPES, TOKEN_PATH, docsUrlFor, type AuthProps, type Env } from "./env";
 import { pickLang } from "./html";
 import { handleMcp } from "./mcp";
@@ -36,6 +38,8 @@ const defaultHandler = {
     }
     if (url.pathname === "/privacy") return Response.redirect(env.PRIVACY_URL, 302);
     if (url.pathname === "/healthz") return new Response("ok");
+    const icon = handleIcon(url.pathname);
+    if (icon) return icon;
 
     return new Response("Not Found", { status: 404 });
   },
